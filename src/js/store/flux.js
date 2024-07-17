@@ -1,18 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			
+			contacts: null,
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -37,7 +27,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+			getContacts: async () => {
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/amrhector/contacts");
+				const data = await response.json();
+				console.log("contacts from flux", data.contacts);
+				setStore({ contacts: data.contacts });
+				console.log("contacts from store", data.contacts);
+			},
+			addContact: async (contact) => {
+				const store = getStore();
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/amrhector/contacts", {
+					method: "POST",
+					body: JSON.stringify(contact),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				});
+				const data = await response.json();
+				console.log(data);
+			},
 		}
 	};
 };
